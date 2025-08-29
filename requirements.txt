@@ -1,0 +1,24 @@
+# Core dependencies
+requests>=2.28.0
+beautifulsoup4>=4.11.0
+numpy>=1.23.0
+scikit-learn>=1.2.0
+
+# Solr integration
+pysolr>=3.9.0
+
+# NLP and ML
+spacy>=3.4.0
+sentence-transformers>=2.2.0
+transformers>=4.25.0
+
+# Graph processing
+networkx>=2.8.0
+
+# Web crawling
+urllib3>=1.26.0
+lxml>=4.9.0
+
+# Utilities
+python-dateutil>=2.8.0
+tqdm>=4.64.0
