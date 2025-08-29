@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schema name="forever_llm" version="1.6">
+  <!-- Fields -->
+  <field name="id" type="string" indexed="true" stored="true" required="true" />
+  <field name="url" type="string" indexed="true" stored="true" />
+  <field name="title" type="text_general" indexed="true" stored="true" />
+  <field name="description" type="text_general" indexed="true" stored="true" />
+  <field name="text" type="text_general" indexed="true" stored="true" />
+  <field name="timestamp" type="pdate" indexed="true" stored="true" />
+  
+  <!-- Entity fields -->
+  <field name="entities_persons" type="text_general" indexed="true" stored="true" multiValued="true" />
+  <field name="entities_orgs" type="text_general" indexed="true" stored="true" multiValued="true" />
+  <field name="entities_locations" type="text_general" indexed="true" stored="true" multiValued="true" />
+  
+  <!-- Feature fields for LTR -->
+  <field name="has_code" type="boolean" indexed="true" stored="true" />
+  <field name="page_rank" type="pfloat" indexed="true" stored="true" />
+  <field name="click_count" type="pint" indexed="true" stored="true" default="0" />
+  
+  <!-- Vector field for semantic search -->
+  <field name="text_vector" type="knn_vector" indexed="true" stored="true" />
+  
+  <!-- Dynamic fields -->
+  <dynamicField name="*_i" type="pint" indexed="true" stored="true" />
+  <dynamicField name="*_s" type="string" indexed="true" stored="true" />
+  <dynamicField name="*_f" type="pfloat" indexed="true" stored="true" />
+  <dynamicField name="*_b" type="boolean" indexed="true" stored="true" />
+  <dynamicField name="*_dt" type="pdate" indexed="true" stored="true" />
+  
+  <!-- Field types -->
+  <fieldType name="string" class="solr.StrField" sortMissingLast="true" />
+  <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true" />
+  <fieldType name="pint" class="solr.IntPointField" docValues="true" />
+  <fieldType name="pfloat" class="solr.FloatPointField" docValues="true" />
+  <fieldType name="pdate" class="solr.DatePointField" docValues="true" />
+  
+  <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100">
+    <analyzer type="index">
+      <tokenizer class="solr.StandardTokenizerFactory" />
+      <filter class="solr.LowerCaseFilterFactory" />
+      <filter class="solr.StopFilterFactory" ignoreCase="true" />
+      <filter class="solr.PorterStemFilterFactory" />
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.StandardTokenizerFactory" />
+      <filter class="solr.LowerCaseFilterFactory" />
+      <filter class="solr.StopFilterFactory" ignoreCase="true" />
+      <filter class="solr.PorterStemFilterFactory" />
+    </analyzer>
+  </fieldType>
+  
+  <!-- Vector field type (384 dimensions for all-MiniLM-L6-v2) -->
+  <fieldType name="knn_vector" class="solr.DenseVectorField" vectorDimension="384" similarityFunction="cosine" />
+  
+  <uniqueKey>id</uniqueKey>
+</schema>
