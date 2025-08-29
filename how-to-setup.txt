@@ -1,3 +1,4 @@
 mkdir -p solr_config/conf
 
 copy schema.xml to solr_config/conf/
+copy solrconfig.xml to solr_config/conf/
