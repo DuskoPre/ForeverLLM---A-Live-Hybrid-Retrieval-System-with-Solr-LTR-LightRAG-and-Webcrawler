@@ -1,0 +1,49 @@
+[
+  {
+    "name": "originalScore",
+    "class": "org.apache.solr.ltr.feature.OriginalScoreFeature",
+    "params": {}
+  },
+  {
+    "name": "titleMatchScore",
+    "class": "org.apache.solr.ltr.feature.SolrFeature",
+    "params": {
+      "q": "{!dismax qf=title}${query}"
+    }
+  },
+  {
+    "name": "textMatchScore",
+    "class": "org.apache.solr.ltr.feature.SolrFeature",
+    "params": {
+      "q": "{!dismax qf=text}${query}"
+    }
+  },
+  {
+    "name": "freshness",
+    "class": "org.apache.solr.ltr.feature.SolrFeature",
+    "params": {
+      "q": "{!func}recip(ms(NOW,timestamp),3.16e-11,1,1)"
+    }
+  },
+  {
+    "name": "hasCode",
+    "class": "org.apache.solr.ltr.feature.FieldValueFeature",
+    "params": {
+      "field": "has_code"
+    }
+  },
+  {
+    "name": "clickCount",
+    "class": "org.apache.solr.ltr.feature.FieldValueFeature",
+    "params": {
+      "field": "click_count"
+    }
+  },
+  {
+    "name": "entityMatch",
+    "class": "org.apache.solr.ltr.feature.SolrFeature",
+    "params": {
+      "q": "{!dismax qf='entities_persons entities_orgs entities_locations'}${query}"
+    }
+  }
+]
