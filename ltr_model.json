@@ -1,0 +1,13 @@
+{
+  "class": "org.apache.solr.ltr.model.LinearModel",
+  "name": "foreverLLMModel",
+  "features": [
+    {"name": "originalScore", "weight": 1.0},
+    {"name": "titleMatchScore", "weight": 3.0},
+    {"name": "textMatchScore", "weight": 1.5},
+    {"name": "freshness", "weight": 0.5},
+    {"name": "hasCode", "weight": 0.3},
+    {"name": "clickCount", "weight": 0.1},
+    {"name": "entityMatch", "weight": 2.0}
+  ]
+}
