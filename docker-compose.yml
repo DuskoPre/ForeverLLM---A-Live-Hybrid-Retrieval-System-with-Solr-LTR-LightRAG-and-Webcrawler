@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  solr:
+    image: solr:9.4
+    container_name: forever_llm_solr
+    ports:
+      - "8983:8983"
+    volumes:
+      - ./solr_data:/var/solr
+      - ./solr_config:/opt/solr/server/solr/configsets/forever_llm
+    environment:
+      - SOLR_HEAP=2g
+    command:
+      - solr-precreate
+      - forever_llm
+      - /opt/solr/server/solr/configsets/forever_llm
+    networks:
+      - forever_llm_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: forever_llm_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis_data:/data
+    networks:
+      - forever_llm_network
+
+networks:
+  forever_llm_network:
+    driver: bridge
+
+volumes:
+  solr_data:
+  redis_data:
