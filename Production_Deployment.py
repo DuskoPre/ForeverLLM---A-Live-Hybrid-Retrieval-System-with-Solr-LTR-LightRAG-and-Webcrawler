@@ -30,6 +30,12 @@ import uuid
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
 
+
+from Advanced_Components import FeedbackLoopManager
+from Advanced_Components import AsyncWebCrawler
+from Advanced_Components import VectorIndexManager
+from Advanced_Components import AdvancedLTRTrainer
+
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -82,34 +88,6 @@ class MockLightRAG:
     def _optimize_knowledge_graph(self):
         logger.info("Knowledge graph optimized")
 
-class MockCrawler:
-    """Mock crawler for demonstration"""
-    def __init__(self, config):
-        self.config = config
-        
-    def targeted_crawl(self, urls):
-        return [{'url': url, 'title': f'Title for {url}', 'content': f'Content from {url}'} for url in urls[:3]]
-
-class MockFeedbackManager:
-    """Mock feedback manager for demonstration"""
-    def __init__(self, config):
-        self.config = config
-        
-    def record_interaction(self, query, results, user_action):
-        logger.info(f"Recorded interaction for query: {query}")
-        
-    def get_training_data(self):
-        return [{'query': 'test', 'relevance': 1.0}] * 50
-
-class MockAdvancedLTRTrainer:
-    """Mock LTR trainer for demonstration"""
-    def __init__(self, config):
-        self.config = config
-        self.training_data = []
-        
-    def train_xgboost_model(self):
-        logger.info("Trained XGBoost model")
-        return True
 
 # Mock the main ForeverLLM class
 class ForeverLLM:
