@@ -8,4 +8,6 @@ copy schema.xml to solr_config/conf/
 copy solrconfig.xml to solr_config/conf/
 
 # ==================== Setup Script ====================
-run setup_forever_llm.sh
+1. Run: ./setup_forever_llm.sh
+2. Start the system: python forever_llm.py
+3. Try examples: python example_usage.py
