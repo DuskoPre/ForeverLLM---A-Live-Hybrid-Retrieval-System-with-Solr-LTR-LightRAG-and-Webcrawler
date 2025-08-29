@@ -1,5 +1,7 @@
 mkdir -p solr_config/conf
 
+
+# ==================== Solr Schema Configuration ====================
 copy schema.xml to solr_config/conf/
 
 # ==================== Solr Config with LTR support ====================
