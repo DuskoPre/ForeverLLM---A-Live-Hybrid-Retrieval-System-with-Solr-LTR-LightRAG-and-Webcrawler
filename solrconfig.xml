@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+  <luceneMatchVersion>9.4</luceneMatchVersion>
+  
+  <dataDir>${solr.data.dir:}</dataDir>
+  
+  <directoryFactory name="DirectoryFactory" 
+                    class="${solr.directoryFactory:solr.NRTCachingDirectoryFactory}"/>
+  
+  <codecFactory class="solr.SchemaCodecFactory"/>
+  
+  <indexConfig>
+    <lockType>${solr.lock.type:native}</lockType>
+  </indexConfig>
+  
+  <updateHandler class="solr.DirectUpdateHandler2">
+    <updateLog>
+      <str name="dir">${solr.ulog.dir:}</str>
+    </updateLog>
+    <autoCommit>
+      <maxTime>${solr.autoCommit.maxTime:15000}</maxTime>
+      <openSearcher>false</openSearcher>
+    </autoCommit>
+  </updateHandler>
+  
+  <!-- Query settings -->
+  <query>
+    <maxBooleanClauses>1024</maxBooleanClauses>
+    <filterCache class="solr.CaffeineCache" size="512" initialSize="512" autowarmCount="0"/>
+    <queryResultCache class="solr.CaffeineCache" size="512" initialSize="512" autowarmCount="0"/>
+    <documentCache class="solr.CaffeineCache" size="512" initialSize="512" autowarmCount="0"/>
+    <enableLazyFieldLoading>true</enableLazyFieldLoading>
+    <queryResultWindowSize>20</queryResultWindowSize>
+    <queryResultMaxDocsCached>200</queryResultMaxDocsCached>
+  </query>
+  
+  <!-- Request Handlers -->
+  <requestHandler name="/select" class="solr.SearchHandler">
+    <lst name="defaults">
+      <str name="echoParams">explicit</str>
+      <int name="rows">10</int>
+      <str name="df">text</str>
+    </lst>
+  </requestHandler>
+  
+  <!-- LTR Query Parser -->
+  <queryParser name="ltr" class="org.apache.solr.ltr.search.LTRQParserPlugin"/>
+  
+  <!-- LTR Transformer -->
+  <transformer name="features" class="org.apache.solr.ltr.response.transform.LTRFeatureLoggerTransformerFactory">
+    <str name="fvCacheName">QUERY_DOC_FV</str>
+  </transformer>
+  
+  <!-- Feature Store -->
+  <query>
+    <cache name="QUERY_DOC_FV"
+           class="solr.CaffeineCache"
+           size="4096"
+           initialSize="2048"
+           autowarmCount="4096"
+           regenerator="solr.search.NoOpRegenerator" />
+  </query>
+  
+  <!-- Update Request Processor for LTR -->
+  <updateRequestProcessorChain name="dedupe">
+    <processor class="solr.processor.SignatureUpdateProcessorFactory">
+      <bool name="enabled">true</bool>
+      <str name="signatureField">id</str>
+      <bool name="overwriteDupes">false</bool>
+      <str name="fields">url</str>
+      <str name="signatureClass">solr.processor.Lookup3Signature</str>
+    </processor>
+    <processor class="solr.LogUpdateProcessorFactory" />
+    <processor class="solr.RunUpdateProcessorFactory" />
+  </updateRequestProcessorChain>
+  
+  <requestHandler name="/update" class="solr.UpdateRequestHandler" />
+  
+  <!-- LTR Model Store -->
+  <requestHandler name="/model-store" class="org.apache.solr.rest.RestManager$ManagedEndpoint">
+    <lst name="invariants">
+      <str name="resource">/schema/model-store</str>
+    </lst>
+  </requestHandler>
+  
+  <!-- LTR Feature Store -->
+  <requestHandler name="/feature-store" class="org.apache.solr.rest.RestManager$ManagedEndpoint">
+    <lst name="invariants">
+      <str name="resource">/schema/feature-store</str>
+    </lst>
+  </requestHandler>
+</config>
